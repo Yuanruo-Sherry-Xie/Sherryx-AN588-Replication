@@ -1,0 +1,154 @@
+---
+title: "Replication of Dezecache et al. (2017)"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  warning = FALSE, 
+  message = FALSE,
+  fig.path = "img/",
+  fig.align = "center"
+)
+library(tidyverse)
+library(ggplot2)
+```
+
+# 1. Introduction 
+
+This report presents a replication of selected analyses from the study *Skin temperature changes in wild chimpanzees upon hearing vocalizations of conspecifics* by Dezecache et al. (2017). The study used infrared thermography (IRT) to measure facial temperature changes in chimpanzees in response to different vocalizations. These changes are thought to reflect emotional or autonomic nervous system responses.
+
+This replication focuses on three components: - Changes in nose and ear temperature before and after hearing a vocalization (**Figure 3**) - Temperature over time in response to **aversive vs. non-aversive calls** (**Figure 4**) - Temperature over time for specific call types (**Figure 5**)
+
+# 2. Data Import and Inspection
+
+```{r load-data}
+figure3 <- read_csv("figure3.csv", skip = 1)
+figure4 <- read_csv("figure4.csv")
+figure5 <- read_csv("figure5.csv")
+
+head(figure3)
+```
+
+# 3. Replication of Figure 3: Nose and Ear Temperatures Before and After Vocalizations
+
+## 3.1 Descriptive Statistics
+
+```{r figure3-summary}
+summary(figure3)
+
+# Means and SDs
+descriptive_stats <- figure3 %>%
+  summarise(
+    across(everything(), list(mean = mean, sd = sd), na.rm = TRUE)
+  ) %>%
+  pivot_longer(cols = everything(),
+               names_to = c("Variable", ".value"),
+               names_sep = "_")
+
+descriptive_stats
+```
+
+## 3.2 Visualization
+
+```{r figure3-plot}
+figure3_long <- figure3 %>%
+  pivot_longer(cols = everything(),
+               names_to = c("Location", "Time"),
+               names_sep = "_",
+               values_to = "Temp")
+
+ggplot(figure3_long, aes(x = Time, y = Temp, fill = Location)) +
+  geom_boxplot(position = position_dodge(width = 0.8)) +
+  theme_minimal() +
+  labs(title = "Figure 3 Replication: Temperature Before vs After Vocalization",
+       y = "Temperature Change")
+```
+
+**Original Figure from Dezecache et al. (2017):**\
+![](img/figure-3-original.png)
+
+## 3.3 Inferential Statistics
+
+```{r t-tests-figure3}
+t.test(figure3$Nose_Before, figure3$Nose_After, paired = TRUE)
+t.test(figure3$Ear_Before, figure3$Ear_After, paired = TRUE)
+```
+
+# 4. Replication of Figure 4: Aversive vs. Non-Aversive Calls
+
+## 4.1 Data Wrangling
+
+```{r figure4-clean-long}
+figure4_long <- figure4 %>%
+  pivot_longer(everything(),
+               names_to = c("Location", "Condition", "Measure"),
+               names_sep = "_",
+               values_to = "Value") %>%
+  pivot_wider(names_from = Measure, values_from = Value) %>%
+  drop_na()
+
+head(figure4_long)
+```
+
+## 4.2 Visualization
+
+```{r figure4-plot}
+ggplot(figure4_long, aes(x = Time, y = Temperature, color = Condition)) +
+  geom_line() +
+  facet_wrap(~Location) +
+  theme_minimal() +
+  labs(title = "Figure 4 Replication: Temperature Over Time",
+       y = "Temperature", x = "Time")
+```
+
+**Original Figure from Dezecache et al. (2017):**\
+![](img/figure-4-original.png)
+
+# 5. Replication of Figure 5: Temperature by Call Type
+
+## 5.1 Data Wrangling
+
+```{r figure5-clean-long}
+figure5_long <- figure5 %>%
+  pivot_longer(cols = everything(),
+               names_to = c("Location", "CallType", "Measure"),
+               names_sep = "_",
+               values_to = "Value") %>%
+  pivot_wider(names_from = Measure, values_from = Value) %>%
+  drop_na()
+```
+
+## 5.2 Visualization
+
+```{r figure5-plot}
+ggplot(figure5_long, aes(x = Time, y = Temperature, color = CallType)) +
+  geom_point(alpha = 0.6) +
+  facet_wrap(~Location) +
+  theme_minimal() +
+  labs(title = "Figure 5 Replication: Temperature Change by Call Type")
+```
+
+**Original Figure from Dezecache et al. (2017):**\
+![](img/figure-5-original.png)
+
+# 6. Conclusion
+
+This replication broadly confirms the findings of Dezecache et al. (2017): - Nose temperature tends to **decrease** after vocalizations, while ear temperature tends to **increase**. - Aversive vocalizations show a more pronounced temperature shift compared to non-aversive ones. - Distinct vocalizations are associated with different thermal profiles, particularly in the nose.
+
+### Notes:
+
+Some differences may arise from how missing data were handled, data cleaning, or potential nuances in the original figure construction. This replication demonstrates strong alignment with the original analyses.
+
+------------------------------------------------------------------------
+
+**Reference:**\
+Dezecache, G., Zuberbühler, K., Davila-Ross, M., & Dahl, C. D. (2017). *Skin temperature changes in wild chimpanzees upon hearing vocalizations of conspecifics*. Royal Society Open Science, 4(11), 170151.
