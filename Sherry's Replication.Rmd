@@ -157,6 +157,40 @@ cor_results_fig5
 
 ```
 
+works perfectly!!! yayyyy. enough data = precise and accurate replication
+
+figure replication
+
+```{r}
+# Subset to only target vocalizations
+target_calls <- c("Bark", "Pant-hoot", "Scream", "Whimper")
+figure5_filtered <- figure5 %>%
+  filter(Vocalization %in% target_calls)
+
+# Clean up call order and facet structure
+figure5_filtered$Vocalization <- factor(figure5_filtered$Vocalization,
+                                        levels = c("Bark", "Pant-hoot", "Scream", "Whimper"))
+
+figure5_filtered$Region <- factor(figure5_filtered$Region, levels = c("Nose", "Ear"))
+
+# Plot
+ggplot(figure5_filtered, aes(x = Time, y = Temperature)) +
+  geom_point(alpha = 0.3, shape = 16, size = 1.5) +  # points with transparency
+  geom_smooth(method = "lm", se = FALSE, color = "red") +  # linear regression line
+  facet_grid(Region ~ Vocalization) +
+  theme_minimal() +
+  labs(
+    title = "Figure 5 Replication: Temperature vs. Time by Vocalization",
+    x = "Time relative to vocalization (s)",
+    y = "Temperature (°C)"
+  ) +
+  theme(
+    strip.text = element_text(size = 10, face = "bold"),
+    plot.title = element_text(hjust = 0.5, size = 14)
+  )
+
+```
+
 # 3. Replication of Figure 3: Nose and Ear Temperatures Before and After Vocalizations
 
 ## 3.1 Descriptive Statistics
