@@ -21,6 +21,8 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
+library(broom)
+library(purrr)
 ```
 
 # 1. Introduction
@@ -35,7 +37,9 @@ This replication focuses on three components: - Changes in nose and ear temperat
 figure3 <- read_csv("figure3.csv")
 figure4 <- read_csv("figure4.csv")
 figure5 <- read_csv("figure5.csv")
+```
 
+```{r}
 head(figure3)
 ```
 
@@ -52,37 +56,104 @@ descriptive_stats_fig3 <- figure3 %>%
   )
 
 descriptive_stats_fig3
-
 ```
 
 SECOND DESCRIPTIVE
 
 ```{r}
 # --- Classify time periods as 'Before' and 'After'
-figure4_descriptive <- figure4 %>%
+figure4_descriptive_NEW <- figure4 %>%
   mutate(
-    Region = case_when(
-      grepl("Nose", Type) ~ "Nose",
-      grepl("Ear", Type) ~ "Ear"
-    ),
-    Condition = case_when(
-      grepl("Aversive", Type) ~ "Aversive",
-      grepl("NonAversive", Type) ~ "NonAversive"
-    ),
     Period = ifelse(Time < 0, "Before", "After")
   )
 
 # --- Calculate means and SDs for each Region x Condition x Period group
-descriptive_stats_fig4 <- figure4_descriptive %>%
-  group_by(Region, Condition, Period) %>%
+descriptive_stats_fig4_NEW <- figure4_descriptive_NEW %>%
+  group_by(Type, Condition, Period) %>%
   summarise(
     n = n(),
     mean_temp = round(mean(Temperature, na.rm = TRUE), 2),
     sd_temp = round(sd(Temperature, na.rm = TRUE), 2)
   ) %>%
-  arrange(Region, Condition, Period)
+  arrange(Type, Condition, Period)
 
-descriptive_stats_fig4
+descriptive_stats_fig4_NEW
+```
+
+STATE THE PROBLEM HERE
+
+inferential
+
+```{r}
+# Perform paired t-tests for Nose and Ear
+t_test_nose <- figure3 %>%
+  filter(Type == "Nose") %>%
+  with(t.test(Before, After, paired = TRUE))
+
+t_test_ear <- figure3 %>%
+  filter(Type == "Ear") %>%
+  with(t.test(Before, After, paired = TRUE))
+
+# Display results
+t_test_nose
+t_test_ear
+
+```
+
+Interpretation:
+
+If your output for the nose region gives a t-statistic near 3.52 and a p-value \< 0.001, it confirms the significant decrease reported by the authors.
+
+If the ear region test shows a t-statistic near −2.38 with p \< 0.05, it supports their finding of a significant increase in ear temperature.
+
+These results demonstrate that your replication accurately captures the statistical effects originally reported, validating your data preparation and analysis pipeline.
+
+pearson
+
+```{r}
+# Function to apply Pearson correlation per group
+library(broom)
+
+cor_results <- figure4 %>%
+  group_by(Type, Condition) %>%
+  summarise(
+    n = n(),
+    cor_test = list(cor.test(Time, Temperature, method = "pearson")),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    tidied = map(cor_test, broom::tidy)
+  ) %>%
+  unnest(tidied) %>%
+  select(Type, Condition, n, estimate, p.value, statistic)
+
+cor_results
+
+```
+
+it actually worked for the nose!!!
+
+"The same patterns are visible when applying Pearson linear correlations between the two variables time and temperature (aversive: r = −0.29, n = 171, p \< 0.001; non-aversive: r = 0.08, n = 50, p = 0.28)."
+
+for figure 5
+
+```{r}
+# Perform Pearson correlations for each combination of Region and Vocalization
+cor_results_fig5 <- figure5 %>%
+  group_by(Region, Vocalization) %>%
+  summarise(
+    n = n(),
+    cor_test = list(cor.test(Time, Temperature, method = "pearson")),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    tidied = map(cor_test, tidy)
+  ) %>%
+  unnest(tidied) %>%
+  select(Region, Vocalization, n, estimate, p.value, statistic)
+
+# View results
+cor_results_fig5
 
 ```
 
