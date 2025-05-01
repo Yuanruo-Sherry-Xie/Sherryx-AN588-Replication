@@ -32,7 +32,7 @@ This replication focuses on three components: - Changes in nose and ear temperat
 # 2. Data Import and Inspection
 
 ```{r load-data}
-figure3 <- read_csv("figure3.csv", skip = 1)
+figure3 <- read_csv("figure3.csv")
 figure4 <- read_csv("figure4.csv")
 figure5 <- read_csv("figure5.csv")
 
@@ -52,6 +52,37 @@ descriptive_stats_fig3 <- figure3 %>%
   )
 
 descriptive_stats_fig3
+
+```
+
+SECOND DESCRIPTIVE
+
+```{r}
+# --- Classify time periods as 'Before' and 'After'
+figure4_descriptive <- figure4 %>%
+  mutate(
+    Region = case_when(
+      grepl("Nose", Type) ~ "Nose",
+      grepl("Ear", Type) ~ "Ear"
+    ),
+    Condition = case_when(
+      grepl("Aversive", Type) ~ "Aversive",
+      grepl("NonAversive", Type) ~ "NonAversive"
+    ),
+    Period = ifelse(Time < 0, "Before", "After")
+  )
+
+# --- Calculate means and SDs for each Region x Condition x Period group
+descriptive_stats_fig4 <- figure4_descriptive %>%
+  group_by(Region, Condition, Period) %>%
+  summarise(
+    n = n(),
+    mean_temp = round(mean(Temperature, na.rm = TRUE), 2),
+    sd_temp = round(sd(Temperature, na.rm = TRUE), 2)
+  ) %>%
+  arrange(Region, Condition, Period)
+
+descriptive_stats_fig4
 
 ```
 
