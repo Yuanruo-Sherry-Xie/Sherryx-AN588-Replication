@@ -16,9 +16,7 @@ output:
 **Reference:**\
 [Dezecache, G., Zuberbühler, K., Davila-Ross, M., & Dahl, C. D. (2017). *Skin temperature changes in wild chimpanzees upon hearing vocalizations of conspecifics*. Royal Society Open Science, 4(11), 170151.](https://royalsocietypublishing.org/doi/10.1098/rsos.160816)
 
-This report presents a replication of selected analyses from the study *Skin temperature changes in wild chimpanzees upon hearing vocalizations of conspecifics* by Dezecache et al. (2017). The study used infrared thermography (IRT) to measure facial temperature changes in chimpanzees in response to different vocalizations. These changes are thought to reflect emotional or autonomic nervous system responses.
-
-This replication focuses on three components: - Changes in nose and ear temperature before and after hearing a vocalization (**Figure 3**) - Temperature over time in response to **aversive vs. non-aversive calls** (**Figure 4**) - Temperature over time for specific call types (**Figure 5**)
+NEED TO WRITE
 
 # Data Import and Inspection
 
@@ -35,11 +33,15 @@ library(scales)
 
 ## Cleaned data load in
 
+I HAD TO MANUALLY COPY AND PASTE AND CLEAN/ORGANIZE THE DATA FROM THE ORIGNAL DATA THAT IS PUBLICALLY AVALIBALE BECAUSE IT IS UNORGANIZED ALL ON ONE INTERFACE OF EXCEL. I SEPERATED THE PUBLICALLY AVALIBLE DATA, WHICH IS FOR FIGURES 3-5, INTO THEIR OWN CSV FILE. WHILE RENAMING AND FIGURING OUT THE COLUMN HEADERS/TITLES
+
 ```{r load-data}
 figure3 <- read_csv("figure3.csv")
 figure4 <- read_csv("figure4.csv")
 figure5 <- read_csv("figure5.csv")
 ```
+
+THIS IS JUST SHOWING WHAT THE CLEANED DATA ACTUALLY LOOKS LIKE
 
 ```{r}
 head(figure3)
