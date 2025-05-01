@@ -22,7 +22,7 @@ The original study used infrared thermography (IRT) to measure facial skin tempe
 
 -   Descriptive statistics\*\* (mean ± SD before vs. after vocalizations) for nose and ear regions (Figure 3).
 
--   aired t-tests\*\* for before/after comparisons (Figure 3).
+-   Paired t-tests\*\* for before/after comparisons (Figure 3).
 
 -   Pearson correlations\*\* between time and temperature for:
 
