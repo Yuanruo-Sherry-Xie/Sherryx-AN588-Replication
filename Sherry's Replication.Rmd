@@ -191,6 +191,51 @@ ggplot(figure5_filtered, aes(x = Time, y = Temperature)) +
 
 ```
 
+figure 6
+
+```{r}
+## 🔄 Figure 6 Replication: Functional Relationship of Ear and Nose Temperature Change
+
+
+# Subset to four vocalizations
+target_calls <- c("Bark", "Pant-hoot", "Scream", "Whimper")
+
+# Filter data
+fig6 <- figure5 %>%
+  filter(Vocalization %in% target_calls)
+
+# Define color map
+color_map <- c("Bark" = "red", "Pant hoot" = "green", "Scream" = "blue", "Whimper" = "black")
+
+# Set up plot area
+plot(NULL, xlim = c(-1.5, 1.5), ylim = c(-1.5, 1.5), xlab = "temperature of ear region (°C)",
+     ylab = "temperature of nose region (°C)", main = "Figure 6 Replication: Linear Function of Temperature Change")
+
+# Loop through vocalizations and add lines
+for (vocal in target_calls) {
+  # Nose and ear subsets
+  df_nose <- fig6 %>% filter(Vocalization == vocal, Region == "Nose")
+  df_ear  <- fig6 %>% filter(Vocalization == vocal, Region == "Ear")
+  
+  if (nrow(df_nose) >= 2 & nrow(df_ear) >= 2) {
+    # Fit models
+    lm_nose <- lm(Temperature ~ Time, data = df_nose)
+    lm_ear  <- lm(Temperature ~ Time, data = df_ear)
+    
+    # Predict
+    time_seq <- seq(-30, 30, length.out = 100)
+    pred_nose <- predict(lm_nose, newdata = data.frame(Time = time_seq))
+    pred_ear  <- predict(lm_ear, newdata = data.frame(Time = time_seq))
+    
+    # Plot: ear on x, nose on y
+    lines(pred_ear, pred_nose, col = color_map[vocal], lwd = 2)
+  }
+}
+
+legend("topleft", legend = names(color_map), col = color_map, lwd = 2, title = "Vocalization")
+abline(h = 0, v = 0, col = "gray", lty = 2)
+```
+
 # 3. Replication of Figure 3: Nose and Ear Temperatures Before and After Vocalizations
 
 ## 3.1 Descriptive Statistics
