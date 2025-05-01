@@ -177,63 +177,21 @@ figure5_filtered$Region <- factor(figure5_filtered$Region, levels = c("Nose", "E
 ggplot(figure5_filtered, aes(x = Time, y = Temperature)) +
   geom_point(alpha = 0.3, shape = 16, size = 1.5) +  # points with transparency
   geom_smooth(method = "lm", se = FALSE, color = "red") +  # linear regression line
-  facet_grid(Region ~ Vocalization) +
+  facet_wrap(Region ~ Vocalization, scales = "free", ncol = 4) +
+  scale_x_continuous(
+    breaks = seq(-45, 45, by = 15),
+    limits = c(-45, 45)
+  ) +
+  scale_y_continuous(
+    breaks = seq(-2.1, 2.1, by = 0.7),
+    limits = c(-2.1, 2.1),
+    labels = number_format(accuracy = 0.1)
+  ) +
   theme_minimal() +
   labs(
-    title = "Figure 5 Replication: Temperature vs. Time by Vocalization",
     x = "Time relative to vocalization (s)",
     y = "Temperature (°C)"
-  ) +
-  theme(
-    strip.text = element_text(size = 10, face = "bold"),
-    plot.title = element_text(hjust = 0.5, size = 14)
-  )
-
-```
-
-figure 6
-
-```{r}
-## 🔄 Figure 6 Replication: Functional Relationship of Ear and Nose Temperature Change
-
-
-# Subset to four vocalizations
-target_calls <- c("Bark", "Pant-hoot", "Scream", "Whimper")
-
-# Filter data
-fig6 <- figure5 %>%
-  filter(Vocalization %in% target_calls)
-
-# Define color map
-color_map <- c("Bark" = "red", "Pant hoot" = "green", "Scream" = "blue", "Whimper" = "black")
-
-# Set up plot area
-plot(NULL, xlim = c(-1.5, 1.5), ylim = c(-1.5, 1.5), xlab = "temperature of ear region (°C)",
-     ylab = "temperature of nose region (°C)", main = "Figure 6 Replication: Linear Function of Temperature Change")
-
-# Loop through vocalizations and add lines
-for (vocal in target_calls) {
-  # Nose and ear subsets
-  df_nose <- fig6 %>% filter(Vocalization == vocal, Region == "Nose")
-  df_ear  <- fig6 %>% filter(Vocalization == vocal, Region == "Ear")
-  
-  if (nrow(df_nose) >= 2 & nrow(df_ear) >= 2) {
-    # Fit models
-    lm_nose <- lm(Temperature ~ Time, data = df_nose)
-    lm_ear  <- lm(Temperature ~ Time, data = df_ear)
-    
-    # Predict
-    time_seq <- seq(-30, 30, length.out = 100)
-    pred_nose <- predict(lm_nose, newdata = data.frame(Time = time_seq))
-    pred_ear  <- predict(lm_ear, newdata = data.frame(Time = time_seq))
-    
-    # Plot: ear on x, nose on y
-    lines(pred_ear, pred_nose, col = color_map[vocal], lwd = 2)
-  }
-}
-
-legend("topleft", legend = names(color_map), col = color_map, lwd = 2, title = "Vocalization")
-abline(h = 0, v = 0, col = "gray", lty = 2)
+  ) 
 ```
 
 # 3. Replication of Figure 3: Nose and Ear Temperatures Before and After Vocalizations
