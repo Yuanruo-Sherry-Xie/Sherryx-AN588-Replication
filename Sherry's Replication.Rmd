@@ -1,6 +1,6 @@
 ---
-title: "Replication of Dezecache et al. (2017)"
-author: "Your Name"
+title: "Sherry's Replication Assingnment"
+author: "Sherry Xie"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -22,7 +22,7 @@ library(tidyverse)
 library(ggplot2)
 ```
 
-# 1. Introduction 
+# 1. Introduction
 
 This report presents a replication of selected analyses from the study *Skin temperature changes in wild chimpanzees upon hearing vocalizations of conspecifics* by Dezecache et al. (2017). The study used infrared thermography (IRT) to measure facial temperature changes in chimpanzees in response to different vocalizations. These changes are thought to reflect emotional or autonomic nervous system responses.
 
