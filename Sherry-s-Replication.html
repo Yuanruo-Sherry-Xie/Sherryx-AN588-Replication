@@ -1513,18 +1513,7 @@ upon hearing vocalizations of conspecifics.</h1>
 G., Zuberbühler, K., Davila-Ross, M., &amp; Dahl, C. D. (2017). <em>Skin
 temperature changes in wild chimpanzees upon hearing vocalizations of
 conspecifics</em>. Royal Society Open Science, 4(11), 170151.</a></p>
-<p>This report presents a replication of selected analyses from the
-study <em>Skin temperature changes in wild chimpanzees upon hearing
-vocalizations of conspecifics</em> by Dezecache et al. (2017). The study
-used infrared thermography (IRT) to measure facial temperature changes
-in chimpanzees in response to different vocalizations. These changes are
-thought to reflect emotional or autonomic nervous system responses.</p>
-<p>This replication focuses on three components: - Changes in nose and
-ear temperature before and after hearing a vocalization (<strong>Figure
-3</strong>) - Temperature over time in response to <strong>aversive
-vs. non-aversive calls</strong> (<strong>Figure 4</strong>) -
-Temperature over time for specific call types (<strong>Figure
-5</strong>)</p>
+<p>NEED TO WRITE</p>
 </div>
 <div id="data-import-and-inspection" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Data Import and
@@ -1562,6 +1551,11 @@ library(scales)</code></pre>
 <div id="cleaned-data-load-in" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Cleaned data load
 in</h2>
+<p>I HAD TO MANUALLY COPY AND PASTE AND CLEAN/ORGANIZE THE DATA FROM THE
+ORIGNAL DATA THAT IS PUBLICALLY AVALIBALE BECAUSE IT IS UNORGANIZED ALL
+ON ONE INTERFACE OF EXCEL. I SEPERATED THE PUBLICALLY AVALIBLE DATA,
+WHICH IS FOR FIGURES 3-5, INTO THEIR OWN CSV FILE. WHILE RENAMING AND
+FIGURING OUT THE COLUMN HEADERS/TITLES</p>
 <pre class="r"><code>figure3 &lt;- read_csv(&quot;figure3.csv&quot;)</code></pre>
 <pre><code>## Rows: 112 Columns: 3
 ## ── Column specification ────────────────────────────────────────────────────────
@@ -1589,6 +1583,7 @@ in</h2>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>THIS IS JUST SHOWING WHAT THE CLEANED DATA ACTUALLY LOOKS LIKE</p>
 <pre class="r"><code>head(figure3)</code></pre>
 <pre><code>## # A tibble: 6 × 3
 ##   Type   Before   After
