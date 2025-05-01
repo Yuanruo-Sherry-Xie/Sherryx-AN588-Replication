@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 )
 library(tidyverse)
 library(ggplot2)
+library(dplyr)
 ```
 
 # 1. Introduction
@@ -36,6 +37,22 @@ figure4 <- read_csv("figure4.csv")
 figure5 <- read_csv("figure5.csv")
 
 head(figure3)
+```
+
+```{r}
+# Calculate descriptive stats for Nose and Ear
+descriptive_stats_fig3 <- figure3 %>%
+  group_by(Type) %>%
+  summarise(
+    n = n(),
+    mean_before = round(mean(Before, na.rm = TRUE), 2),
+    sd_before = round(sd(Before, na.rm = TRUE), 2),
+    mean_after = round(mean(After, na.rm = TRUE), 2),
+    sd_after = round(sd(After, na.rm = TRUE), 2)
+  )
+
+descriptive_stats_fig3
+
 ```
 
 # 3. Replication of Figure 3: Nose and Ear Temperatures Before and After Vocalizations
